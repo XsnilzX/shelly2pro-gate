@@ -1,0 +1,29 @@
+{
+  "pluginAlias": "Shelly2ProGate",
+  "pluginType": "platform",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "platform": {
+        "type": "string",
+        "const": "Shelly2ProGate"
+      },
+      "devices": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "ip": { "type": "string" },
+            "username": { "type": "string" },
+            "password": { "type": "string" },
+            "relay": { "type": "number", "default": 0 },
+            "pulseDuration": { "type": "number", "default": 1 }
+          },
+          "required": ["name", "ip"]
+        }
+      }
+    },
+    "required": ["platform", "devices"]
+  }
+}
