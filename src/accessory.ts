@@ -1,4 +1,9 @@
-import { PlatformAccessory, Service, Characteristic } from "homebridge";
+import {
+  PlatformAccessory,
+  Service,
+  Characteristic,
+  CharacteristicValue,
+} from "homebridge";
 import axios from "axios";
 import { GateDeviceConfig } from "./settings";
 import { Shelly2ProGatePlatform } from "./platform";
@@ -23,14 +28,15 @@ export class GateAccessory {
 
     this.service
       .getCharacteristic(this.platform.Characteristic.TargetDoorState)
-      .onSet(this.setTargetState.bind(this));
+      .onSet((value: CharacteristicValue) => this.setTargetState(value));
 
     this.service
       .getCharacteristic(this.platform.Characteristic.CurrentDoorState)
       .onGet(() => this.currentState);
   }
 
-  async setTargetState(value: number) {
+  async setTargetState(value: CharacteristicValue) {
+    const targetState = typeof value === "number" ? value : Number(value);
     const relay = this.config.relay ?? 0;
     const url = `http://${this.config.ip}/relay/${relay}?turn=on`;
 

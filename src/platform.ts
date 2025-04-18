@@ -8,7 +8,11 @@ import {
   Characteristic,
 } from "homebridge";
 import axios from "axios";
-import { PLATFORM_NAME, PLUGIN_NAME } from "./settings";
+import {
+  PLATFORM_NAME,
+  PLUGIN_NAME,
+  PlatformConfig as GatePlatformConfig,
+} from "./settings";
 import { GateAccessory } from "./accessory";
 
 export class Shelly2ProGatePlatform implements DynamicPlatformPlugin {
@@ -18,10 +22,11 @@ export class Shelly2ProGatePlatform implements DynamicPlatformPlugin {
 
   constructor(
     public readonly log: Logger,
-    public readonly config: PlatformConfig,
+    public readonly config: GatePlatformConfig,
     public readonly api: API,
   ) {
     if (!config || !config.devices) return;
+
     this.api.on("didFinishLaunching", () => {
       for (const device of config.devices) {
         const uuid = this.api.hap.uuid.generate(device.ip);
@@ -32,5 +37,9 @@ export class Shelly2ProGatePlatform implements DynamicPlatformPlugin {
         ]);
       }
     });
+  }
+
+  configureAccessory(accessory: PlatformAccessory): void {
+    this.accessories.push(accessory);
   }
 }
